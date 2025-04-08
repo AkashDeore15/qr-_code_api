@@ -1,37 +1,135 @@
-# RestAPI for Creating QR Codes
+# QR Code API
 
-For this assignment I want you to go over the videos and I've created a X number of errors in the code that you will have to find and fix them.  You should keep running the tests and read the error and try to understand what it mean.  The purpose of this assignment is to get you accustomed to running the project and following the steps that the program uses to process requests.
+This project provides a RESTful API for generating QR codes. It is built using FastAPI and can be deployed using Docker and Nginx.
 
-Here is my repo with the working code: [https://github.com/kaw393939/fastapi_spring2024](https://github.com/kaw393939/fastapi_spring2024)
+## Table of Contents
 
-You can get this repo working with the install instructions below.  The assignment repo will not work because its filled with broken code.
+- [Introduction](#introduction)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Running Tests](#running-tests)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [Technical Terminology](#technical-terminology)
+- [References](#references)
 
-**To submit this assignment, you should make your own repository and add the remote to git and then push your fixed code to your own repo.** 
+## Introduction
 
-## Grading
+The QR Code API allows users to generate QR codes by making HTTP requests. It leverages FastAPI for handling API requests and responses, ensuring high performance and ease of use.
 
-You will only get 100 if the entire QR program passes GitHub actions, so you will need to update the production.yml file to have your info and setup your environment variables on the repository.
+## Features
 
-# Instructor Videos
-* [Rest API Project Overview](https://youtu.be/xEcBKSSXxhQ)
-* [QR Code Overview for Assignment](https://youtu.be/E6b9VkQpQ-U)
+- Generate QR codes from text input.
+- Retrieve QR codes in various formats.
+- Scalable deployment using Docker and Nginx.
 
+## Prerequisites
 
-## Optional but extremely helpful:
+Before setting up the project, ensure you have the following installed:
 
-1. [Best Series to Learn Bash Scripting Seriously learn this!!!](https://www.youtube.com/playlist?list=PLIhvC56v63IKioClkSNDjW7iz-6TFvLwS)
+- [Python 3.8 or higher](https://www.python.org/downloads/)
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-2.  [Listen to someone else explain FastAPI and go through a project](https://www.youtube.com/watch?v=cbASjoZZGIw)
+## Installation
 
-# Install
-1. Clone
-2. Make virtual environment:  python3 -m venv venv
-3. Activate virtual environment: source venv/bin/activate
-4. Install requirements: pip install -r requirements.txt
-5. **IMPORTANT** run: mkdir qr_codes to create a qr codes directory to save in, permissions will be messed up and the docker container won't be able to write to the qr_codes directory if you don't.
-6. Note: make sure docker is started
-7. run pytest locally to check that it works locally
-8. Start the app with docker compose up --build
-9. Goto http://localhost/docs to view openapi spec documentation
-10. Click "authorize" input username: admin password: secret
-11. Test making,  retrieving, and deleting QR codes on the spec page.
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/AkashDeore15/qr-_code_api.git
+   cd qr-_code_api
+   ```
+
+2. **Create and Activate a Virtual Environment:**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows, use 'venv\Scripts\activate'
+   ```
+
+3. **Install Dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage
+
+1. **Start the FastAPI Application:**
+
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+
+   The API will be accessible at `http://127.0.0.1:8000`.
+
+2. **Generate a QR Code:**
+
+   Send a POST request to the `/generate` endpoint with the text you want to encode. For example, using `curl`:
+
+   ```bash
+   curl -X POST "http://127.0.0.1:8000/generate" -H "Content-Type: application/json" -d '{"text": "Hello, World!"}'
+   ```
+
+   This will return a JSON response containing the QR code image.
+
+## Running Tests
+
+To run the test suite:
+
+```bash
+pytest
+```
+
+Ensure that the FastAPI application is not running when executing the tests, as they may use the same resources.
+
+## Deployment
+
+The project includes a `Dockerfile` and `docker-compose.yml` for containerized deployment.
+
+1. **Build and Start the Containers:**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   This will start the FastAPI application behind an Nginx reverse proxy.
+
+2. **Access the API:**
+
+   The API will be accessible at `http://localhost`.
+
+## Contributing
+
+Contributions are welcome! To add new functionality:
+
+1. Fork the repository.
+2. Create a new branch for your feature.
+3. Implement your changes and ensure tests pass.
+4. Submit a pull request with a detailed description of your changes.
+
+## Technical Terminology
+
+- **RESTful API:** An architectural style for designing networked applications that use HTTP requests to access and manipulate data. [Learn more](https://restfulapi.net/)
+
+- **FastAPI:** A modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on standard Python type hints. [Learn more](https://fastapi.tiangolo.com/)
+
+- **Docker:** A platform for developing, shipping, and running applications in containers. [Learn more](https://www.docker.com/)
+
+- **Nginx:** A web server that can also be used as a reverse proxy, load balancer, mail proxy, and HTTP cache. [Learn more](https://www.nginx.com/)
+
+- **Virtual Environment (venv):** A tool to create isolated Python environments. [Learn more](https://docs.python.org/3/library/venv.html)
+
+- **Uvicorn:** A lightning-fast ASGI server implementation, using [uvloop](https://github.com/MagicStack/uvloop) and [httptools](https://github.com/MagicStack/httptools). [Learn more](https://www.uvicorn.org/)
+
+- **Pytest:** A framework that makes building simple and scalable test cases easy. [Learn more](https://docs.pytest.org/en/latest/)
+
+## References
+
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Nginx Documentation](https://nginx.org/en/docs/)
+- [Pytest Documentation](https://docs.pytest.org/en/latest/)
+
