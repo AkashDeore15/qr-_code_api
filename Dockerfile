@@ -8,38 +8,43 @@ FROM python:3.12-slim-bullseye as base
 # PIP_NO_CACHE_DIR: Disables the pip cache for smaller image size
 # PIP_DEFAULT_TIMEOUT: Avoids hanging during install
 # PIP_DISABLE_PIP_VERSION_CHECK: Suppresses the "new version" message
-# POETRY_VERSION: Specifies the version of poetry to install
+# SERVER_BASE_URL: Specifies the base URL of the server
 ENV PYTHONUNBUFFERED=1 \
     PYTHONFAULTHANDLER=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DEFAULT_TIMEOUT=100 \
-    PIP_DISABLE_PIP_VERSION_CHECK=on
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    SERVER_BASE_URL=http://localhost
 
 # Set the working directory inside the container
-WORKDIR /myapp
+WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gcc libpq-dev \
     && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends gcc libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy only the requirements, to cache them in Docker layer
-COPY ./requirements.txt /myapp/requirements.txt
+COPY ./requirements.txt /app/requirements.txt
 
 # Install Python dependencies
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
+# Create qr_codes directory and set permissions
+RUN mkdir -p /app/qr_codes && chmod 777 /app/qr_codes
+
 # Copy the rest of your application's code
-COPY . /myapp
+COPY . /app/
+
 # Copy the startup script and make it executable
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
+
 # Run the application as a non-root user for security
-RUN useradd -m myuser
+RUN useradd -m myuser && chown -R myuser:myuser /app
 USER myuser
 
 # Tell Docker about the port we'll run on.
