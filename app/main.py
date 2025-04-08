@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from app.config import QR_DIRECTORY
 from app.routers import qr_code, oauth  # Make sure these imports match your project structure.
 from app.services.qr_service import create_directory
@@ -18,7 +20,7 @@ app = FastAPI(
     description="A FastAPI application for creating, listing available codes, and deleting QR codes. "
                 "It also supports OAuth for secure access.",
     version="0.0.1",
-        redoc_url=None,
+    redoc_url=None,
     contact={
         "name": "API Support",
         "url": "http://www.example.com/support",
@@ -28,10 +30,17 @@ app = FastAPI(
         "name": "Apache 2.0",
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
     }
-
 )
+
+@app.get("/")
+async def root():
+    """Redirect root to API documentation"""
+    return RedirectResponse(url="/docs")
+
+# Mount the QR codes directory to serve static files
+app.mount("/downloads", StaticFiles(directory=str(QR_DIRECTORY)), name="downloads")
 
 # Here, we include the routers for our application. Routers define the paths and operations your API provides.
 # We have two routers in this case: one for managing QR codes and another for handling OAuth authentication.
-app.include_router(qr_code.ruter)  # QR code management routes
+app.include_router(qr_code.router)  # QR code management routes
 app.include_router(oauth.router)  # OAuth authentication routes

@@ -20,8 +20,8 @@ FILL_COLOR = os.getenv('FILL_COLOR', 'red')
 BACK_COLOR = os.getenv('BACK_COLOR', 'white')
 
 # SERVER_BASE_URL is the base URL for the server. This might be used for constructing
-# URLs in responses. Defaults to 'http://localhost:80'.
-SERVER_BASE_URL = os.getenv('SERVER_BASE_URL', 'http://localhost:80')
+# URLs in responses. Defaults to 'http://localhost:8000'.
+SERVER_BASE_URL = os.getenv('SERVER_BASE_URL', 'http://localhost:8000')
 
 # SERVER_DOWNLOAD_FOLDER specifies the directory exposed by the server for downloads,
 # such as QR codes. This could be a path routed by your server for static files.
@@ -41,4 +41,4 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 # ADMIN_USER and ADMIN_PASSWORD are placeholder credentials for basic authentication
 # in this example. In production, use a more secure authentication method.
 ADMIN_USER = os.getenv('ADMIN_USER', 'admin')
-ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'ecret')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'secret')

@@ -32,10 +32,21 @@ def generate_qr_code(data: str, path: Path, fill_color: str = 'red', back_color:
     - path (Path): The filesystem path where the QR code image will be saved.
     - fill_color (str): Color of the QR code.
     - back_color (str): Background color of the QR code.
-    - size (int): The size of each box in the QR code grid.
+    - size (int): The size of each box in the QR code grid (between 1 and 50).
     """
     logging.debug("QR code generation started")
     try:
+        # Validate size parameter
+        if not 1 <= size <= 50:
+            raise ValueError("Size must be between 1 and 50")
+
+        # Basic color validation (could be enhanced with regex for hex colors)
+        valid_colors = {'black', 'white', 'red', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta'}
+        if fill_color.lower() not in valid_colors and not fill_color.startswith('#'):
+            raise ValueError(f"Invalid fill color. Use a valid color name or hex code.")
+        if back_color.lower() not in valid_colors and not back_color.startswith('#'):
+            raise ValueError(f"Invalid background color. Use a valid color name or hex code.")
+
         qr = qrcode.QRCode(version=1, box_size=size, border=5)
         qr.add_data(data)
         qr.make(fit=True)
@@ -46,7 +57,7 @@ def generate_qr_code(data: str, path: Path, fill_color: str = 'red', back_color:
         logging.error(f"Failed to generate/save QR code: {e}")
         raise
 
-def delete_qr_cde(file_path: Path):
+def delete_qr_code(file_path: Path):
     """
     Deletes the specified QR code image file.
     Parameters:
