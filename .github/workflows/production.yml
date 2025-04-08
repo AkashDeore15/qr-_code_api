@@ -5,6 +5,7 @@ on:
     branches:
       - main
   pull_request:
+    types: [opened, synchronize]
     branches:
       - main
 
@@ -16,6 +17,8 @@ jobs:
         python-version: [3.12] # Match Dockerfile Python version
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -43,10 +46,12 @@ jobs:
 
   build-and-push-docker:
     needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -60,9 +65,10 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          context: .
           push: true
           tags: akashdeore15/qr_code_api:${{ github.sha }},akashdeore15/qr_code_api:latest
-          platforms: linux/amd64,linux/arm64 # Multi-platform support
+          platforms: linux/amd64,linux/arm64
           cache-from: type=registry,ref=akashdeore15/qr_code_api:latest
           cache-to: type=inline,mode=max
           
@@ -71,6 +77,6 @@ jobs:
         with:
           image-ref: 'akashdeore15/qr_code_api:${{ github.sha }}'
           format: 'table'
-          exit-code: '1' # Fail the job if vulnerabilities are found
+          exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
