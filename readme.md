@@ -133,3 +133,4 @@ Contributions are welcome! To add new functionality:
 - [Nginx Documentation](https://nginx.org/en/docs/)
 - [Pytest Documentation](https://docs.pytest.org/en/latest/)
 
+![image](https://github.com/user-attachments/assets/ceee7fc6-9fef-4a6b-b62e-c7c47c098742)
