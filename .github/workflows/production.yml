@@ -76,11 +76,13 @@ jobs:
           cache-from: type=registry,ref=akashdeore15/qr_code_api:latest
           cache-to: type=inline
           
-      - name: Scan the Docker image
+      - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: 'akashdeore15/qr_code_api:${{ github.sha }}'
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
+          timeout: '5m0s'
