@@ -61,6 +61,18 @@ def validate_and_sanitize_url(url_str):
         logging.error(f"Invalid URL provided: {url_str}")
         return None
 
+def decode_access_token(token: str):
+    """
+    Decodes and validates a JWT access token with explicit algorithm specification.
+    """
+    try:
+        # Always specify the algorithm when decoding
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except jwt.JWTError as e:
+        logging.error(f"JWT decode error: {e}")
+        return None
+
 def encode_url_to_filename(url):
     """
     Encodes a URL into a base64 string safe for filenames, after validating and sanitizing.
